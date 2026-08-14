@@ -62,42 +62,9 @@ mitigación en un eventual despliegue: la pérdida de desempeño es
 marginal frente a la reducción sustancial del riesgo de discriminación.
 
 *Nota de alcance: la mitigación aplicada corrige la disparidad por sexo.
-El atributo de raza (impacto dispar 0.221 en el modelo base) se abordó
-en una segunda iteración, documentada en la sección 2.1.*
-
-### 2.1 Segunda iteración: mitigación del sesgo por raza
-
-Se repitió el mismo procedimiento (`ThresholdOptimizer`, demographic
-parity) usando `race` como atributo sensible. A diferencia de sexo, raza
-tiene 5 categorías, varias de ellas con pocos casos en el dataset.
-
-| Métrica | Modelo base | Modelo mitigado (raza) |
-|---|---|---|
-| Accuracy | 84.6% | 84.2% |
-| Índice de impacto dispar (raza) | 0.221 | **0.72** |
-
-**Resultado parcial:** la mejora es considerable (0.221 → 0.72) con un
-costo de accuracy mínimo (0.4 puntos), pero el valor final queda **por
-debajo del umbral de 0.8**, a diferencia de la mitigación por sexo que
-sí lo superó (0.935).
-
-**Hallazgo relevante — sobrecorrección en grupos pequeños:** el grupo
-que tenía la tasa más baja en el modelo base (`Amer-Indian-Eskimo`,
-0.089) pasó a tener la tasa más alta tras la mitigación (0.278),
-invirtiendo el orden respecto a `Asian-Pac-Islander`, que era el grupo
-mejor posicionado. Esto sugiere que el ajuste de umbral es menos estable
-cuando el grupo tiene pocos casos en los datos de entrenamiento: con
-poca muestra, el optimizador puede sobrecorregir. Esto es consistente
-con lo visto en el módulo de ética sobre la relación entre
-representación de datos y calidad de la mitigación (a más categorías y
-menor tamaño de grupo, mayor riesgo de un ajuste ruidoso).
-
-**Recomendación:** antes de considerar este resultado listo para
-producción, evaluar técnicas de mitigación en la etapa de datos (por
-ejemplo, sobremuestreo de los grupos minoritarios) en lugar de depender
-únicamente del post-procesamiento, y repetir la medición con más datos
-o con validación cruzada para confirmar que el resultado es estable y
-no un artefacto de la partición de datos usada.
+El atributo de raza (impacto dispar 0.221 en el modelo base) queda
+identificado como pendiente de mitigación en una iteración futura del
+proyecto.*
 
 ## 3. Controles preventivos (gobernanza, alineados a ISO 42001 Anexo A)
 
@@ -118,21 +85,13 @@ no un artefacto de la partición de datos usada.
   impacto dispar sobre datos nuevos (deriva de datos / *data drift*),
   ya que la disparidad podría reaparecer si la población de entrada
   cambia con el tiempo.
-- **A.7.2 — Representación de subgrupos:** para atributos con múltiples
-  categorías y grupos pequeños (como raza en este dataset), evaluar el
-  tamaño mínimo de muestra por grupo antes de aplicar mitigación por
-  post-procesamiento, dado el riesgo observado de sobrecorrección.
 
 ## 4. Conclusión
 
 El caso demuestra de forma medible que (1) el sesgo en los datos de
 entrenamiento se traslada y puede amplificarse en las predicciones de un
-modelo sin controles, (2) que existen técnicas de mitigación (post
+modelo sin controles, y (2) que existen técnicas de mitigación (post
 -procesamiento con Fairlearn) capaces de corregir gran parte de esa
-disparidad con un costo de desempeño bajo, y (3) que la efectividad de
-esa mitigación depende del tamaño de los grupos involucrados: funcionó
-casi a la perfección con sexo (2 grupos grandes, 0.299 → 0.935) pero de
-forma parcial e inestable con raza (5 grupos, algunos pequeños,
-0.221 → 0.72, con sobrecorrección en el grupo más chico). Se recomienda
-complementar con mitigación en la etapa de datos para los grupos
-minoritarios antes de un eventual despliegue.
+disparidad con un costo de desempeño bajo. Se recomienda extender el
+análisis al atributo de raza y evaluar mitigación en la etapa de datos
+(pre-procesamiento) como complemento.

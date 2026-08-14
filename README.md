@@ -57,10 +57,12 @@ python src/01_load_and_explore.py
 - [x] Paso 3 — Mitigación de sesgo por sexo con Fairlearn
       (`ThresholdOptimizer`, demographic parity): impacto dispar 0.299 → 0.935
       con costo de solo 1.4 puntos de accuracy
+- [x] Paso 4 — Mitigación de sesgo por raza: impacto dispar 0.221 → 0.72
+      (mejora parcial, no alcanza el umbral de 0.8; se detectó
+      sobrecorrección en el grupo más chico — ver informe)
 - [x] Informe de mitigación estilo ISO 42001 (`docs/informe_mitigacion.md`)
-- [ ] Paso 4 — Mitigar también el sesgo por raza (pendiente)
-- [ ] Paso 5 — Agente simple de monitoreo de deriva del modelo
-- [ ] Paso 6 — Dashboard de evaluación final
+- [ ] Paso 5 — Dashboard de evaluación final (visualización)
+- [ ] Paso 6 — Agente simple de monitoreo de deriva del modelo
 
 ## Referencias
 
